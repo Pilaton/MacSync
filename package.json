@@ -1,0 +1,34 @@
+{
+    "name": "macsync",
+    "version": "0.0.0-development",
+    "description": "Easy sync for macOS. Dotfiles, folders, configurations, etc.",
+    "scripts": {
+        "start_install": "zsh ./bin/install.zsh",
+        "create-demo-folder": "zsh ./test/create-demo-folder.zsh"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Pilaton/MacSync.git"
+    },
+    "keywords": [
+        "macos",
+        "sync",
+        "synchronization",
+        "dotfiles",
+        "files",
+        "folder",
+        "cloud",
+        "dropbox",
+        "backup"
+    ],
+    "author": "pilaton <83372686+Pilaton@users.noreply.github.com> (https://github.com/Pilaton)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Pilaton/MacSync/issues"
+    },
+    "homepage": "https://github.com/Pilaton/MacSync#readme",
+    "os": [
+        "darwin",
+        "linux"
+    ]
+}
