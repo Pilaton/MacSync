@@ -1,6 +1,6 @@
 {
     "name": "macsync",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Easy sync for macOS. Dotfiles, folders, configurations, etc.",
     "scripts": {
         "start_install": "zsh ./bin/install.zsh",
