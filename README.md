@@ -1,6 +1,6 @@
-<div style="text-align: center;">
+<div align="center">
     <a href="https://github.com/Pilaton/MacSync">
-        <img alt="MacSync" src="./doc/images/MacSync_logo.svg" alt="MacSync - Easy sync for Mac OS" style="border-radius: 50%;width: 400px;">
+        <img src="./doc/images/MacSync_logo.svg" alt="MacSync - Easy sync for Mac OS" width="400">
     </a>
     <h1>🍁🔆 MacSync</h1>
     <div>Easy sync for macOS. Dotfiles, folders, configurations, etc.</div>
@@ -65,7 +65,9 @@ zsh ./bin/install.zsh
 
 After launch, you will be offered options to choose from (below is a diagram).
 
-![MacSync usage](doc/images/MacSync-usage.svg)
+<div align="center">
+    <img alt="MacSync usage" src="./doc/images/MacSync-usage.svg" width="650">
+</div>
 
 Let's go over some points.
 
@@ -92,7 +94,9 @@ This command simply connects your device to the sync folder.
 
 After you specify the path to the sync folder and the list of synced files in `config/config.cfg`, and run the application, you get the following directory structure:
 
-![MacSync usage](doc/images/MacSync-folder-structure.svg)
+<div align="center">
+    <img alt="MacSync folder structure" src="./doc/images/MacSync-folder-structure.svg" width="650">
+</div>
 
 I will also leave the directory scheme in its usual form. 😉
 
