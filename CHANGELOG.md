@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/Pilaton/MacSync/compare/v1.0.2...v1.1.0) (2023-11-22)
+
+
+### 🎉 Features
+
+* release-please update ([3e8875a](https://www.github.com/Pilaton/MacSync/commit/3e8875ab3960e5f6cafd06cb409b153feef362ed))
+
+
+### 🛠️ Bug Fixes
+
+* added rsync check ([78b2a99](https://www.github.com/Pilaton/MacSync/commit/78b2a9965c009f75002b20d4062e0594e7fe01ad))
+* Changed file formatting from 4 spaces to 2 ([acb49b5](https://www.github.com/Pilaton/MacSync/commit/acb49b51dcb33e675f7fffbdcbbb0331345e98a5))
+* package.json ([baef19b](https://www.github.com/Pilaton/MacSync/commit/baef19b791d5403e40d5d6489efecc8a6b2e9560))
+
 ### [1.0.2](https://www.github.com/Pilaton/MacSync/compare/v1.0.1...v1.0.2) (2021-12-09)
 
 
