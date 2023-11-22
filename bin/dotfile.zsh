@@ -116,6 +116,10 @@ createDotfilesFolder() {
 #   _BACKUP_DEFAULT_FOLDER
 #######################################
 backupConfigFile() {
+  if ! command -v rsync &> /dev/null; then
+    echo "Error: rsync command not found."
+    exit 1
+  fi
   rsync -aq "${ROOT_FOLDER_PROJECT}/config/config.cfg" "${SYNC_FOLDER}/${_BACKUP_DEFAULT_FOLDER}"
   mv "${SYNC_FOLDER}/${_BACKUP_DEFAULT_FOLDER}/config.cfg" "${SYNC_FOLDER}/${_BACKUP_DEFAULT_FOLDER}/_config.cfg"
 }

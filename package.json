@@ -1,6 +1,6 @@
 {
   "name": "macsync",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Easy sync for macOS. Dotfiles, folders, configurations, etc.",
   "scripts": {
     "start_install": "zsh ./bin/install.zsh",
@@ -30,5 +30,9 @@
   "os": [
     "darwin",
     "linux"
-  ]
+  ],
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  }
 }
