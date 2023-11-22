@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Pilaton/MacSync/compare/v1.2.0...v1.2.1) (2023-11-22)
+
+
+### 🛠️ Bug Fixes
+
+* release-please config ([d7aa302](https://github.com/Pilaton/MacSync/commit/d7aa302e8ceca9a14e53b33e616055991183f489))
+
 ## [1.2.0](https://github.com/Pilaton/MacSync/compare/v1.1.1...v1.2.0) (2023-11-22)
 
 
