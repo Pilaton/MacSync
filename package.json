@@ -1,5 +1,4 @@
-{
-    "name": "macsync",
+   "name": "macsync",
     "version": "1.0.2",
     "description": "Easy sync for macOS. Dotfiles, folders, configurations, etc.",
     "scripts": {
@@ -31,4 +30,3 @@
         "darwin",
         "linux"
     ]
-}
