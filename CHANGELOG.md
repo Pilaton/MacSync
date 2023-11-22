@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.1](https://www.github.com/Pilaton/MacSync/compare/v1.1.0...v1.1.1) (2023-11-22)
+
+
+### 🛠️ Bug Fixes
+
+* updated email for package.json ([00e3b4d](https://www.github.com/Pilaton/MacSync/commit/00e3b4d3af215eef2f1f2eaf09ce7f01270cb404))
+
 ## [1.1.0](https://www.github.com/Pilaton/MacSync/compare/v1.0.2...v1.1.0) (2023-11-22)
 
 
