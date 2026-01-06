@@ -1,0 +1,32 @@
+name: 🔍 ShellCheck
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.zsh"
+      - "**.sh"
+      - ".github/workflows/shellcheck.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "**.zsh"
+      - "**.sh"
+      - ".github/workflows/shellcheck.yml"
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: "./bin"
+          additional_files: "test/create-demo-folder.zsh"
+          severity: warning
+        env:
+          SHELLCHECK_OPTS: -e SC1091 -e SC2154

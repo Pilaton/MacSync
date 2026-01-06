@@ -15,9 +15,17 @@
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# Enable zsh emulation for compatibility
+emulate -L zsh
+
+# Check for required dependencies
+if ! command -v rsync &> /dev/null; then
+  echo "Error: rsync is required but not found. Please install rsync."
+  exit 1
+fi
 
 # Set colors if "tput" is present in the system
-if [[ ! -z $(which tput 2> /dev/null) ]]; then
+if command -v tput &> /dev/null; then
   bold=$(tput bold)
   colorRed=$(tput setaf 1)
   colorGreen=$(tput setaf 2)
@@ -68,7 +76,7 @@ checkConfigFile
 # Let's initialize synchronization. If synchronization was performed earlier, we offer options
 #######################################
 initSync() {
-  if ! checkDtofilesFolder; then
+  if ! checkDotfilesFolder; then
     startSyncDot "first_sync"
   else
     chooseNextStep
@@ -81,7 +89,7 @@ initSync() {
 #   SYNC_FOLDER
 #######################################
 disableSync() {
-  if ! checkDtofilesFolder; then
+  if ! checkDotfilesFolder; then
     echo "${colorRed}Dotfile sync folder not found...${reset}"
     echo "(${SYNC_FOLDER}/dotfiles)"
     echo "...Exit" && exit

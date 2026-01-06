@@ -13,9 +13,11 @@
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# Enable zsh emulation for compatibility
+emulate -L zsh
 
 # Save the path to the MacSync folder in a variable
-ROOT_FOLDER_PROJECT=$PWD
+ROOT_FOLDER_PROJECT="$PWD"
 
 
 #######################################
@@ -38,8 +40,8 @@ progressbar() {
 #   0 (true) if the folder exists
 #   1 (false) if does not exist
 #######################################
-checkDtofilesFolder() {
-  if [[ -d ${SYNC_FOLDER}/dotfiles ]]; then
+checkDotfilesFolder() {
+  if [[ -d "${SYNC_FOLDER}/dotfiles" ]]; then
     return 0
   fi
   return 1
@@ -62,8 +64,8 @@ checkSynchronizedFiles() {
 
   for file in "${BACKUP_FILES[@]}"; do
     # Check that the file or folder exists and is not a symlink
-    if [[ -e ${file} ]] && ! [[ -L ${file} ]]; then
-      _BACKUP_VALID_FILES+=(${file})
+    if [[ -e "${file}" ]] && ! [[ -L "${file}" ]]; then
+      _BACKUP_VALID_FILES+=("${file}")
       echo "${file} - ${colorGreen}OK${reset}"
     else
       NOT_VALID_FILES+=("${file}")
@@ -133,7 +135,7 @@ backupConfigFile() {
 #   [text...] Backup file (path)
 #######################################
 backupFiles() {
-  rsync -aRq ${1} "${SYNC_FOLDER}/${_BACKUP_DEFAULT_FOLDER}"
+  rsync -aRq "${1}" "${SYNC_FOLDER}/${_BACKUP_DEFAULT_FOLDER}"
 }
 
 #######################################
@@ -145,8 +147,8 @@ backupFiles() {
 #   [text...] File to sync (path)
 #######################################
 moveFiles() {
-  rsync -auRq ${1} "${SYNC_FOLDER}/dotfiles"
-  rm -rf ${1}
+  rsync -auRq "${1}" "${SYNC_FOLDER}/dotfiles"
+  rm -rf "${1}"
 }
 
 #######################################
@@ -157,8 +159,8 @@ moveFiles() {
 #   [text...] File to sync (path)
 #######################################
 deleteSyncedFilesFromMyPC() {
-  if [[ -d ${SYNC_FOLDER}/dotfiles/${1} ]] || [[ -f ${SYNC_FOLDER}/dotfiles/${1} ]]; then
-    rm -rf ${1}
+  if [[ -d "${SYNC_FOLDER}/dotfiles/${1}" ]] || [[ -f "${SYNC_FOLDER}/dotfiles/${1}" ]]; then
+    rm -rf "${1}"
   fi
 }
 
@@ -170,7 +172,7 @@ deleteSyncedFilesFromMyPC() {
 #   [text...] File to sync (path)
 #######################################
 creatingSymbolicLinks() {
-  ln -s "${SYNC_FOLDER}/dotfiles/${1}" ${1}
+  ln -s "${SYNC_FOLDER}/dotfiles/${1}" "${1}"
 }
 
 
@@ -183,9 +185,9 @@ creatingSymbolicLinks() {
 syncFirst() {
   createDotfilesFolder
   for file in "${_BACKUP_VALID_FILES[@]}"; do
-    backupFiles ${file}
-    moveFiles ${file}
-    creatingSymbolicLinks ${file}
+    backupFiles "${file}"
+    moveFiles "${file}"
+    creatingSymbolicLinks "${file}"
   done
 }
 
@@ -199,9 +201,9 @@ syncWithReplace() {
   rm -rf "${SYNC_FOLDER}/dotfiles"
   createDotfilesFolder
   for file in "${_BACKUP_VALID_FILES[@]}"; do
-    backupFiles ${file}
-    moveFiles ${file}
-    creatingSymbolicLinks ${file}
+    backupFiles "${file}"
+    moveFiles "${file}"
+    creatingSymbolicLinks "${file}"
   done
 }
 
@@ -212,9 +214,9 @@ syncWithReplace() {
 #######################################
 syncWithUpdate() {
   for file in "${_BACKUP_VALID_FILES[@]}"; do
-    backupFiles ${file}
-    moveFiles ${file}
-    creatingSymbolicLinks ${file}
+    backupFiles "${file}"
+    moveFiles "${file}"
+    creatingSymbolicLinks "${file}"
   done
 }
 
@@ -225,9 +227,9 @@ syncWithUpdate() {
 #######################################
 syncWithDownload() {
   for file in "${_BACKUP_VALID_FILES[@]}"; do
-    backupFiles ${file}
-    deleteSyncedFilesFromMyPC ${file}
-    creatingSymbolicLinks ${file}
+    backupFiles "${file}"
+    deleteSyncedFilesFromMyPC "${file}"
+    creatingSymbolicLinks "${file}"
   done
 }
 
@@ -299,8 +301,8 @@ disableSyncDot() {
   for file in "${BACKUP_FILES[@]}"; do
 
     # Check if the file is a symlink and if the original exists in the sync folder
-    if [[ -L ${file} ]] && [[ -e ${SYNC_FOLDER}/dotfiles/${file} ]]; then
-      rm -rf ${file}
+    if [[ -L "${file}" ]] && [[ -e "${SYNC_FOLDER}/dotfiles/${file}" ]]; then
+      rm -rf "${file}"
       rsync -aRq "${SYNC_FOLDER}/dotfiles/./${file}" ~
       echo "${file} — ${colorGreen}restored${reset}"
     else
