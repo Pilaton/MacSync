@@ -59,7 +59,8 @@ jobs:
 
       - name: 🍺 Install BATS
         run: |
-          brew install bats-core || brew link --overwrite bats-core
+          brew install bats-core || true
+          brew link --overwrite bats-core
 
       - name: 🧪 Run tests
         run: bats test/macsync.bats
