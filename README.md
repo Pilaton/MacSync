@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Pilaton/MacSync">
-    <img src="doc/images/MacSync_logo.svg" alt="MacSync" width="350">
+    <img src="docs/images/MacSync_logo.svg" alt="MacSync" width="350">
   </a>
 </p>
 
