@@ -27,7 +27,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Zsh
         run: sudo apt-get update && sudo apt-get install -y zsh
@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 📦 Cache Homebrew
         uses: actions/cache@v4
@@ -78,7 +78,7 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 🕺 Release
         uses: googleapis/release-please-action@v4
@@ -96,7 +96,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: ⬇️ Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 🍺 Update Homebrew Tap
         env:
