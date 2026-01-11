@@ -1,0 +1,9 @@
+{
+	"packages": {
+		".": {
+			"release-type": "simple",
+			"package-name": "MacSync",
+			"extra-files": ["VERSION"]
+		}
+	}
+}
