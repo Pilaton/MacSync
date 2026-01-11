@@ -111,7 +111,16 @@ validate_config() {
   local sync_parent="${SYNC_FOLDER:h}"
   if [[ ! -d "${sync_parent}" ]]; then
     echo "${colorRed:-}Error: Sync folder parent directory does not exist: ${sync_parent}${reset:-}" >&2
-    echo "Please create it or update SYNC_FOLDER in config.cfg"
+    echo ""
+    echo "${colorYellow:-}This usually means you need to configure MacSync first.${reset:-}"
+    echo ""
+    echo "Edit the config file:"
+    echo "  ${colorCyan:-}${MACSYNC_CONFIG_FILE}${reset:-}"
+    echo ""
+    echo "Set SYNC_FOLDER to your cloud storage path, for example:"
+    echo "  SYNC_FOLDER=~/iCloud/MacSync"
+    echo "  SYNC_FOLDER=~/Google\\ Drive/MacSync"
+    echo "  SYNC_FOLDER=~/OneDrive/MacSync"
     return 1
   fi
 
