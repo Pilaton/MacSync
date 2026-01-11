@@ -161,8 +161,7 @@ show_version() {
   # Read version from VERSION file
   if [[ -f "${MACSYNC_ROOT:-}/VERSION" ]]; then
     # Use Zsh optimized file reading ($<file) and parameter expansion for trimming
-    # Extract version from JSON format: {"version": "x.y.z"}
-    version=$(grep -o '"version": *"[^"]*"' "${MACSYNC_ROOT}/VERSION" | cut -d'"' -f4)
+    version=${$(<"${MACSYNC_ROOT}/VERSION")//[[:space:]]/}
   fi
 
   echo "MacSync version ${version}"
