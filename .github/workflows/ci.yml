@@ -128,10 +128,9 @@ jobs:
 
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global credential.helper store
-          echo "https://x-access-token:${TAP_TOKEN}@github.com" > ~/.git-credentials
 
-          if ! git clone "https://github.com/${TAP_REPO}.git" tap-repo; then
+          # Clone with PAT directly in URL
+          if ! git clone "https://${TAP_TOKEN}@github.com/${TAP_REPO}.git" tap-repo; then
             echo "::error::Failed to clone tap repository"
             exit 1
           fi
@@ -166,7 +165,3 @@ jobs:
             git push origin main
             echo "✅ Formula updated successfully"
           fi
-
-      - name: 🧹 Cleanup credentials
-        if: always()
-        run: rm -f ~/.git-credentials
