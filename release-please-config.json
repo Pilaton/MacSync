@@ -3,7 +3,7 @@
 		".": {
 			"release-type": "simple",
 			"package-name": "MacSync",
-			"extra-files": ["VERSION"],
+			"version-file": "VERSION",
 			"changelog-types": [
 				{ "type": "feat", "section": "Features", "hidden": false },
 				{ "type": "fix", "section": "Bug Fixes", "hidden": false },
