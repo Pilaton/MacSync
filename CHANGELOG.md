@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.1](https://github.com/Pilaton/MacSync/compare/MacSync-v2.0.0...MacSync-v2.0.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* correct version reading from VERSION file ([7cb95f9](https://github.com/Pilaton/MacSync/commit/7cb95f9126fd1519e9ee4b1e8efc92672d7c9b51))
+* resolve brew publication auth and use json for versioning ([85a0989](https://github.com/Pilaton/MacSync/commit/85a0989e468bbe690ba002181452e1506afd835d))
+* use version-file instead of extra-files to update VERSION in PR ([8166366](https://github.com/Pilaton/MacSync/commit/81663662eb3b573cf1cbd5c4ee95892ce9ea1b90))
+
 ## [2.0.0](https://github.com/Pilaton/MacSync/compare/MacSync-v1.2.1...MacSync-v2.0.0) (2026-01-11)
 
 
