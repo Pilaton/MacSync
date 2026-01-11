@@ -1,0 +1,64 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#        File:  config.cfg
+#
+#        Name:  MacSync
+# Description:  A simple solution to sync your settings and dotfiles.
+#
+#      Author:  Pilaton
+#      GitHub:  https://github.com/Pilaton/MacSync
+#        Bugs:  https://github.com/Pilaton/MacSync/issues
+#     License:  MIT
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+########### DEFAULT CONFIG ############
+
+# The name of your device for naming the backup folder
+_NAME_PC=$(scutil --get LocalHostName)
+
+# The path and name of the backup folder
+# Note: date/timestamp are evaluated at runtime (intentional - creates unique backup per run)
+_BACKUP_DEFAULT_FOLDER=_Backup_default_config/"${_NAME_PC}"_"$(date +'%d-%m-%Y_%s')"
+
+
+
+########### YOUR CONFIG ############
+
+# Synchronization folder path
+#
+# Example: ~/Dropbox/MySyncFolder
+#
+SYNC_FOLDER=
+
+# Name of the folder for synced files (default: dotfiles)
+# This folder will be created inside SYNC_FOLDER
+#
+# Example: SYNC_FOLDER_NAME=syncfiles
+#
+SYNC_FOLDER_NAME=dotfiles
+
+# List of files and folders to sync
+# File and folder paths start from the user's home directory (~/)
+# Use multi-line format for better readability:
+#
+# BACKUP_FILES=(
+#   .zshrc
+#   .gitconfig
+#   .config/starship.toml
+#   .ssh/config
+# )
+#
+BACKUP_FILES=()
+
+
+########### LOGGING CONFIG ############
+
+# Enable logging (true/false)
+LOG_ENABLED=true
+
+# Log file path
+LOG_FILE=~/.macsync/macsync.log
+
+# Maximum log file size in KB (rotates when exceeded)
+LOG_MAX_SIZE=500

@@ -1,0 +1,48 @@
+name: 🧪 Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "lib/**"
+      - "test/**"
+      - "config/**"
+      - ".github/workflows/tests.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "lib/**"
+      - "test/**"
+      - "config/**"
+      - ".github/workflows/tests.yml"
+
+jobs:
+  bats:
+    name: BATS Tests
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Cache Homebrew
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /opt/homebrew/Cellar/bats-core
+          key: ${{ runner.os }}-brew-bats-${{ hashFiles('.github/workflows/tests.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-brew-bats-
+
+      - name: 🍺 Install BATS
+        run: brew install bats-core
+
+      - name: 🧪 Run tests
+        run: bats test/macsync.bats
+
+      - name: ✅ Summary
+        if: success()
+        run: echo "All tests passed!"

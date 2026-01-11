@@ -1,0 +1,8 @@
+# Default owner for all files
+* @Pilaton
+
+# Specific paths
+/.github/ @Pilaton
+/lib/ @Pilaton
+/bin/ @Pilaton
+/test/ @Pilaton

@@ -1,0 +1,239 @@
+#!/usr/bin/env zsh
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#        File:  macsync
+#
+#       Usage:  macsync [OPTIONS]
+#
+#        Name:  MacSync
+# Description:  Easy sync for macOS. Dotfiles, folders, configurations.
+#
+#      Author:  Pilaton
+#      GitHub:  https://github.com/Pilaton/MacSync
+#        Bugs:  https://github.com/Pilaton/MacSync/issues
+#     License:  MIT
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Enable zsh emulation for compatibility
+emulate -L zsh
+
+# Determine the MacSync installation directory
+# Works whether running from symlink, direct path, or anywhere
+# We use the Zsh modifier :A to resolve absolute path, then :h twice to go up to root
+MACSYNC_ROOT="${0:A:h:h}"
+
+export MACSYNC_ROOT
+
+
+# Check for required dependencies
+if ! command -v rsync &> /dev/null; then
+  echo "Error: rsync is required but not found. Please install rsync."
+  exit 1
+fi
+
+# Source library modules
+source "${MACSYNC_ROOT}/lib/menu.zsh"
+source "${MACSYNC_ROOT}/lib/config.zsh"
+source "${MACSYNC_ROOT}/lib/logger.zsh"
+source "${MACSYNC_ROOT}/lib/cli.zsh"
+source "${MACSYNC_ROOT}/lib/sync.zsh"
+
+# Set colors if "tput" is present in the system
+if command -v tput &> /dev/null; then
+  bold=$(tput bold)
+  colorRed=$(tput setaf 1)
+  colorGreen=$(tput setaf 2)
+  colorYellow=$(tput setaf 3)
+  colorCyan=$(tput setaf 6)
+  reset=$(tput sgr0)
+
+  # Export colors for use in sourced scripts (global scope)
+  typeset -g bold colorRed colorGreen colorYellow colorCyan reset
+else
+  # Initialize empty values if tput is not available
+  bold="" colorRed="" colorGreen="" colorYellow="" colorCyan="" reset=""
+fi
+
+# Initialize config
+init_config
+init_ret=$?
+
+if [[ $init_ret -eq 2 ]]; then
+    # Config was just created, exit to let user edit it
+    exit 0
+elif [[ $init_ret -ne 0 ]]; then
+    exit 1
+fi
+
+# Acquire lock to prevent concurrent execution
+_lock_file="${MACSYNC_CONFIG_DIR}/.macsync.lock"
+
+if [[ -f "${_lock_file}" ]]; then
+  _lock_pid=$(cat "${_lock_file}" 2>/dev/null)
+  if [[ -n "${_lock_pid}" ]] && kill -0 "${_lock_pid}" 2>/dev/null; then
+    echo "${colorRed:-}Error: Another instance is already running (PID: ${_lock_pid})${reset:-}" >&2
+    exit 1
+  fi
+  # Stale lock, remove it
+  rm -f "${_lock_file}"
+fi
+
+# Create lock file with current PID
+echo $$ > "${_lock_file}" || {
+  echo "${colorRed:-}Error: Could not create lock file${reset:-}" >&2
+  exit 1
+}
+
+# Cleanup lock on exit
+trap "rm -f ${_lock_file}" EXIT INT TERM
+
+# Source configuration
+source "${MACSYNC_CONFIG_FILE}"
+
+# Parse command-line arguments
+parse_args "$@"
+
+# Handle --help and --version early
+if [[ "${SHOW_HELP}" == "true" ]]; then
+  show_help
+  exit 0
+fi
+
+if [[ "${SHOW_VERSION}" == "true" ]]; then
+  show_version
+  exit 0
+fi
+
+# Apply CLI overrides to config
+apply_cli_overrides
+
+# Set default for SYNC_FOLDER_NAME if not specified in config
+: "${SYNC_FOLDER_NAME:=dotfiles}"
+export SYNC_FOLDER_NAME
+
+# Initialize logging
+log_init
+log_info "Sync folder: ${SYNC_FOLDER}"
+log_info "Sync folder name: ${SYNC_FOLDER_NAME}"
+log_info "Files to sync: ${BACKUP_FILES[*]}"
+is_dry_run && log_info "DRY-RUN mode enabled"
+
+# Switch to user's home directory for all operations
+cd ~ || { echo "${colorRed:-}Error: Could not change to home directory${reset:-}"; exit 1; }
+
+# Validate configuration
+if ! validate_config; then
+  echo "...Exit"
+  exit 1
+fi
+
+#######################################
+# Start synchronization workflow.
+# Shows sync options if dotfiles folder exists, otherwise starts first sync.
+# Returns:
+#   0 on success, 1 if user chose back
+#######################################
+initSync() {
+  if ! check_dotfiles_folder; then
+    sync_files "first_sync"
+    return $?
+  else
+    chooseNextStep
+    return $?
+  fi
+}
+
+#######################################
+# Disable sync
+#######################################
+disableSync() {
+  if ! check_dotfiles_folder; then
+    echo "${colorRed:-}Sync folder not found...${reset:-}"
+    echo "(${SYNC_FOLDER}/${SYNC_FOLDER_NAME})"
+    echo "...Exit" && exit 1
+  fi
+
+  disable_sync_files
+}
+
+#######################################
+# Display sync options menu for existing sync folder.
+# Returns:
+#   0 on sync complete, 1 on back
+#######################################
+chooseNextStep() {
+  echo "${colorYellow:-}${bold:-}The '${SYNC_FOLDER}/${SYNC_FOLDER_NAME}' folder already exists.${reset:-}"
+  echo ""
+
+  menu_select "${colorYellow:-}${bold:-}How will we connect?${reset:-}" \
+    "Replace all files" \
+    "Update obsolete files" \
+    "Connect only" \
+    "← Back"
+
+  case $MENU_RESULT in
+    1) sync_files "replace"  ; return 0 ;;
+    2) sync_files "update"   ; return 0 ;;
+    3) sync_files "download" ; return 0 ;;
+    4) return 1 ;;  # Back to main menu
+    *) return 1 ;;
+  esac
+}
+
+#######################################
+# Display welcome screen with interactive menu.
+# Handles main navigation: sync, disable, exit.
+#######################################
+welcomeScreen() {
+  # Horizontal gradient colors (left to right: purple → cyan)
+  local c1="\e[38;5;99m"   # purple
+  local c2="\e[38;5;105m"  # light purple
+  local c3="\e[38;5;111m"  # blue
+  local c4="\e[38;5;117m"  # light blue
+  local c5="\e[38;5;123m"  # cyan
+  local c6="\e[38;5;159m"  # light cyan
+  local rst="\e[0m"
+
+  echo ""
+  printf "${c1}███    ███${c2}  █████ ${c3}  ██████${c4} ███████${c5} ██    ██${c6} ███    ██  ██████${rst}\n"
+  printf "${c1}████  ████${c2} ██   ██${c3} ██     ${c4} ██     ${c5}  ██  ██ ${c6} ████   ██ ██     ${rst}\n"
+  printf "${c1}██ ████ ██${c2} ███████${c3} ██     ${c4} ███████${c5}   ████  ${c6} ██ ██  ██ ██     ${rst}\n"
+  printf "${c1}██  ██  ██${c2} ██   ██${c3} ██     ${c4}      ██${c5}    ██   ${c6} ██  ██ ██ ██     ${rst}\n"
+  printf "${c1}██      ██${c2} ██   ██${c3}  ██████${c4} ███████${c5}    ██   ${c6} ██   ████  ██████${rst}\n"
+  echo ""
+  echo "${colorCyan:-}Config:${reset:-} ${MACSYNC_CONFIG_FILE}"
+  echo ""
+
+  # Interactive menu with arrow keys (loop to support "back")
+  while true; do
+    menu_select "${colorYellow:-}${bold:-}What do we do?${reset:-}" \
+      "Synchronize my files" \
+      "Disable sync" \
+      "Exit"
+    
+    # Handle menu failure (EOF or error)
+    if [[ $? -ne 0 ]] || [[ "$MENU_RESULT" -eq 0 ]]; then
+      echo "" && exit 0
+    fi
+    
+    case $MENU_RESULT in
+      1) initSync && return 0 ;;  # If returns 1 (back), loop continues
+      2) disableSync ; return 0 ;;
+      3) echo "" && exit 0 ;;
+    esac
+  done
+}
+
+# Show dry-run banner if enabled
+if is_dry_run; then
+  echo ""
+  echo "${colorYellow:-}${bold:-}╔════════════════════════════════════════╗${reset:-}"
+  echo "${colorYellow:-}${bold:-}║          DRY-RUN MODE ENABLED          ║${reset:-}"
+  echo "${colorYellow:-}${bold:-}║   No changes will be made to files     ║${reset:-}"
+  echo "${colorYellow:-}${bold:-}╚════════════════════════════════════════╝${reset:-}"
+  echo ""
+fi
+
+welcomeScreen
+log_end

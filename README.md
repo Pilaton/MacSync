@@ -1,115 +1,151 @@
-<div align="center">
-    <a href="https://github.com/Pilaton/MacSync">
-        <img src="./doc/images/MacSync_logo.svg" alt="MacSync - Easy sync for Mac OS" width="400">
-    </a>
-    <h1>🍁🔆 MacSync</h1>
-    <div>Easy sync for macOS. Dotfiles, folders, configurations, etc.</div>
-</div>
+<p align="center">
+  <a href="https://github.com/Pilaton/MacSync">
+    <img src="doc/images/MacSync_logo.svg" alt="MacSync" width="350">
+  </a>
+</p>
+
+<h3 align="center">Easy sync for macOS. Dotfiles, folders, configs — anything.</h3>
+
+<p align="center">
+  <a href="https://github.com/Pilaton/MacSync/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Pilaton/MacSync" alt="License"></a>
+  <a href="https://github.com/Pilaton/MacSync/releases"><img src="https://img.shields.io/github/v/release/Pilaton/MacSync" alt="Release"></a>
+  <img src="https://img.shields.io/badge/platform-macOS-lightgrey" alt="macOS">
+  <img src="https://img.shields.io/badge/homebrew-available-orange" alt="Homebrew">
+  <img src="https://img.shields.io/badge/shell-zsh-blue" alt="Zsh">
+</p>
+
+---
+
+Sync files and folders across Macs using **Dropbox**, **iCloud**, **Google Drive**, **OneDrive**, **Yandex.Disk**, **NAS**, or any folder that syncs between devices.
+
+MacSync moves files to a sync folder and creates symlinks in their place. Edit on one Mac — changes appear on all others. Works with dotfiles, app configs, scripts, projects — anything.
 
 ## Contents
 
-- [What is it](#what-is-it)
-- [Installing and configuration](#installing-and-configuration)
-- [Usage](#usage)
-- [Folder structure](#folder-structure)
-- [How it works](#how-it-works)
+- [Contents](#contents)
+- [Quick Start](#quick-start)
+- [Sync Modes](#sync-modes)
+- [Disabling Sync](#disabling-sync)
+- [CLI Reference](#cli-reference)
+- [How It Works](#how-it-works)
+- [Security Considerations](#security-considerations)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [Requirements](#requirements)
+- [Changelog](#changelog)
 
-## What is it
+## Quick Start
 
-MacSync is a simple application that helps you sync the files and folders you need between your Mac devices.
+**1. Install**
 
-Synchronize your files through any cloud storage ([Dropbox](https://dropbox.com), [Google Drive](https://google.com/drive/), [Microsoft OneDrive](https://www.microsoft.com/microsoft-365/onedrive/online-cloud-storage), [Apple iCloud](https://icloud.com), [Yandex.Disk](https://disk.yandex.ru) and others), your own server, NAS, [GitHub](https://github.com) or whatever.
-
-## Installing and configuration
-
-1. Download the project and go to the project folder
-
-```bash
-# Download the project to the directory you need
-git clone https://github.com/Pilaton/MacSync.git --depth=1
-
-# Go to the project folder
-cd MacSync/
+```sh
+brew install pilaton/tap/macsync
 ```
 
-2. Configuring `config/config.cfg`
+<details>
+<summary>Manual installation</summary>
 
-```bash
-########### YOUR CONFIG ############
-
-# Synchronization folder path
-#
-# Example: ~/Dropbox/MySyncFolder
-#
-SYNC_FOLDER=~/Dropbox/MySyncFolder
-
-
-# List of files and folders to sync
-# File and folder paths start from the user's home directory ($ ~/)
-#
-# Example: BACKUP_FILES=(Sites/mySite .oh-my-zsh/custom .gitconfig .zshrc .npmrc)
-#
-BACKUP_FILES=(Sites/mySite .oh-my-zsh/custom .gitconfig .zshrc .npmrc)
+```sh
+git clone https://github.com/Pilaton/MacSync.git ~/.macsync-app
+ln -s ~/.macsync-app/bin/macsync /usr/local/bin/macsync
 ```
 
-## Usage
+</details>
 
-Once you have configured `config/config.cfg`, run MacSync.
+**2. Configure** — edit `~/.macsync/config.cfg` (created on first run):
 
-```bash
-# Launch MacSync with the command
-make install
-# OR
-zsh ./bin/install.zsh
+```sh
+# Where to store synced files (must be accessible from all your Macs)
+SYNC_FOLDER=~/Dropbox/MacSync
+
+# What to sync (paths relative to ~)
+BACKUP_FILES=(
+  .zshrc
+  .gitconfig
+  .config/nvim
+  .ssh/config
+)
 ```
 
-After launch, you will be offered options to choose from (below is a diagram).
+**3. Run**
 
-<div align="center">
-    <img alt="MacSync usage" src="./doc/images/MacSync-usage.svg" width="650">
-</div>
+```sh
+macsync
+```
 
-Let's go over some points.
+That's it. Your files are now in the sync folder, symlinked locally.
 
-`Disable sync`
+## Sync Modes
 
-This command launches the return of synchronized files to your device and removes their symlinks.  
-To avoid problems, files are not deleted from the sync folder.
+```mermaid
+flowchart TD
+    A["$ macsync"] --> B{"What do we do?"}
+    B --> C["Synchronize my files"]
+    B --> D["Disable sync"]
+    
+    C --> E{"dotfiles/ folder exists?"}
+    E -->|No| F["First sync"]
+    E -->|Yes| G{"Choose mode"}
+    
+    G --> H["Replace all files"]
+    G --> I["Update obsolete files"]
+    G --> J["Connect only"]
+    
+    D --> K["Restore files locally"]
+```
 
-`Connect and replace all files in it`
+**Connection options** (when `dotfiles/` folder exists):
 
-This command connects your device to the sync folder by first deleting it completely, then re-creating it and adding your new files to it.
+| Option | What happens | When to use |
+| :----- | :------------ | :---------- |
+| **Replace all files** | Deletes the `dotfiles/` folder, then uploads your local files fresh | Starting fresh, or when local files are the source of truth |
+| **Update obsolete files** | Uploads your local files, overwriting any existing files in sync folder | When you want to add or update files in sync folder |
+| **Connect only** | Just creates symlinks to existing files without uploading anything | When sync folder already has the correct files and you just need to link them |
 
-`Connect and update obsolete files`
+## Disabling Sync
 
-This command connects your device to the sync folder, adding your new files to it.  
-If some files already exist and the date they were edited is older than yours, they will be updated.
+Select "Disable sync" in the menu. MacSync will:
 
-`Connect only`
+1. Copy files back from sync folder to their original locations
+2. Remove symlinks
+3. Files in sync folder remain unchanged
 
-This command simply connects your device to the sync folder.  
-💡 Note: Only those files that are specified in your config file and if they exist in the sync folder will be synchronized.
+## CLI Reference
 
-## Folder structure
+```sh
+macsync                              # Interactive mode
+macsync --dry-run                    # Preview without changes
+macsync --sync-folder ~/path         # Override sync folder
+macsync --files ".zshrc,.gitconfig"  # Override file list
+macsync --verbose                    # Detailed output
+macsync --quiet                      # Minimal output
+macsync --help                       # Show help
+```
 
-After you specify the path to the sync folder and the list of synced files in `config/config.cfg`, and run the application, you get the following directory structure:
+## How It Works
 
-<div align="center">
-    <img alt="MacSync folder structure" src="./doc/images/MacSync-folder-structure.svg" width="650">
-</div>
+```text
+~/.zshrc (symlink) → ~/Dropbox/MacSync/dotfiles/.zshrc (real file)
+```
 
-I will also leave the directory scheme in its usual form. 😉
+1. **Backup** — original files saved to `_Backup_default_config/<device>_<date>_<timestamp>/`
+2. **Move** — files relocated to `<SYNC_FOLDER>/dotfiles/`
+3. **Link** — symlinks created at original paths
 
-```bash
-📂 MySyncFolder
+Your sync service keeps the `dotfiles/` folder updated across devices.
+
+**Folder structure:**
+
+```
+📂 SYNC_FOLDER
 ├── 📂 _Backup_default_config
-│   └── 📂 iMac_01-12-2021_1124983521
+│   └── 📂 iMac_01-12-2025_1733011200
 │   │   ├── _config.cfg
 │   │   ├── .gitconfig
 │   │   ├── .otherconfig
 │   │   └── .zshrc
 │   │
-│   └── 📂 MacBook_04-12-2021_1638581744
+│   └── 📂 MacBook_04-01-2026_1735948800
 │       ├── 📂 .oh-my-zsh
 │       │   └── 📂 custom
 │       ├── 📂 Sites
@@ -130,34 +166,47 @@ I will also leave the directory scheme in its usual form. 😉
     └── .zshrc
 ```
 
-`📂 _Backup_default_config`
+- `_Backup_default_config/` — backups of original files (created before each sync)
+- `dotfiles/` — synced files, symlinked on all connected Macs
 
-This folder contains folders with backups of the original files of your devices.  
-💡 Note: A backup happens every time you start MacSync.
+## Security Considerations
 
-`📂 _Backup_default_config/'your-device_date_timestamp'`
+- **Sensitive files**: Avoid syncing private keys (`.ssh/id_rsa`, `.ssh/id_ed25519`) or files with passwords. Use `.ssh/config` with caution.
+- **Cloud encryption**: Ensure your cloud service encrypts data at rest and in transit.
+- **Permissions**: MacSync preserves file permissions, but verify them after syncing sensitive files.
+- **Backup location**: Backups are stored in your sync folder and will be synced across devices.
 
-These folders contain the actual backups of the original files themselves.  
-They will also store your `config.cfg`
+## Troubleshooting
 
-💡 Note: The "original files" are those that are specified in the config file:  
-`BACKUP_FILES=(Sites/mySite .oh-my-zsh/custom .gitconfig .zshrc .npmrc)`
+**Sync folder not found** — verify path in `~/.macsync/config.cfg` and ensure folder exists.
 
-`📂 dotfiles`
+**Broken symlinks** — run `macsync --dry-run` to diagnose; check that files exist in `<SYNC_FOLDER>/dotfiles/`.
 
-This folder contains files that are synced between your devices.
+**Changes not syncing** — verify your sync service is running; check symlinks with `ls -la ~/.zshrc`.
 
-## How it works
+**Restore from backup** — find backups in `_Backup_default_config/`, or use "Disable sync" to restore automatically.
 
-What happens when you start syncing on your device for the first time:
+## FAQ
 
-1. The application creates the required folders.
-1. Takes a list of your files and makes a backup.
-1. Then it moves your files to the sync folder `📂 dotfiles`
-1. Instead of your files, symlinks are created on your device to the original files in the sync folder.
+**Q: Can I sync files outside `~`?**  
+A: No, MacSync only works with paths relative to home directory.
 
-This way, all your devices can be connected to the same files. 😎
+**Q: What if I delete a file from the sync folder?**  
+A: Symlink breaks. Use "Disable sync" or restore from backup.
 
-## License
+**Q: Can I exclude files?**  
+A: Yes — simply don't add them to `BACKUP_FILES`.
 
-MIT © [Pilaton](https://github.com/Pilaton)
+## Requirements
+
+- macOS 10.15+ (Catalina or newer)
+- zsh (default since Catalina)
+- rsync
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
+
+---
+
+[GitHub](https://github.com/Pilaton/MacSync) · [Issues](https://github.com/Pilaton/MacSync/issues) · [Contributing](CONTRIBUTING.md) · [MIT License](LICENSE)

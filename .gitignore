@@ -1,3 +1,24 @@
-.vscode
-node_modules/
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Testing
+/tmp/macsync-*
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.backup
+
+# Lock files (runtime)
+.macsync.lock
+homebrew-tap/
