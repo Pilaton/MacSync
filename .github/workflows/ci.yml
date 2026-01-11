@@ -9,6 +9,8 @@ on:
       - "test/**"
       - "config/**"
       - ".github/workflows/ci.yml"
+      - "release-please-config.json"
+      - ".release-please-manifest.json"
   pull_request:
     branches: [main]
     paths:
