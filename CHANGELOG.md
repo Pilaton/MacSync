@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Pilaton/MacSync/compare/MacSync-v2.0.1...MacSync-v2.1.0) (2026-01-11)
+
+
+### Features
+
+* add GitHub Pages landing page ([4f9b885](https://github.com/Pilaton/MacSync/commit/4f9b885c32cc515976d397fea746da88be928d44))
+
 ## [2.0.1](https://github.com/Pilaton/MacSync/compare/MacSync-v2.0.0...MacSync-v2.0.1) (2026-01-11)
 
 
