@@ -26,7 +26,7 @@ jobs:
 
   update-brew-tap:
     needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created }}
+    if: ${{ needs.release-please.outputs.releases_created == 'true' && needs.release-please.outputs.tag_name != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
