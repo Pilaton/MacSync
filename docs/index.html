@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MacSync — Easy sync for macOS</title>
+    <meta
+      name="description"
+      content="Sync dotfiles, folders, and configs across Macs using Dropbox, iCloud, Google Drive, OneDrive, or any cloud service."
+    />
+    <meta name="keywords" content="macos, sync, dotfiles, backup, symlinks, dropbox, icloud, zsh" />
+    <meta name="author" content="Pilaton" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="MacSync — Easy sync for macOS" />
+    <meta
+      property="og:description"
+      content="Sync dotfiles, folders, and configs across Macs using any cloud service."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://macsync.pilaton.com/" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/Pilaton/MacSync/main/doc/images/MacSync_logo.svg"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/Pilaton/MacSync/main/doc/images/MacSync_logo.svg"
+      type="image/svg+xml"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-bg"></div>
+      <div class="container">
+        <img
+          src="https://raw.githubusercontent.com/Pilaton/MacSync/main/doc/images/MacSync_logo.svg"
+          alt="MacSync Logo"
+          class="logo"
+          width="180"
+          height="180"
+        />
+        <h1>MacSync</h1>
+        <p class="tagline">Easy sync for macOS. Dotfiles, folders, configs — anything.</p>
+        <p class="subtitle">
+          Sync files across Macs using <strong>Dropbox</strong>, <strong>iCloud</strong>,
+          <strong>Google Drive</strong>, <strong>OneDrive</strong>, <strong>NAS</strong>, or any
+          folder that syncs between devices.
+        </p>
+        <div class="cta-buttons">
+          <a href="#quick-start" class="btn btn-primary">Get Started</a>
+          <a
+            href="https://github.com/Pilaton/MacSync"
+            class="btn btn-secondary"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            GitHub
+          </a>
+        </div>
+        <div class="badges">
+          <img src="https://img.shields.io/github/license/Pilaton/MacSync" alt="License" />
+          <img src="https://img.shields.io/github/v/release/Pilaton/MacSync" alt="Release" />
+          <img src="https://img.shields.io/badge/platform-macOS-lightgrey" alt="macOS" />
+          <img src="https://img.shields.io/badge/homebrew-available-orange" alt="Homebrew" />
+        </div>
+      </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2>Why MacSync?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">☁️</div>
+            <h3>Any Cloud Service</h3>
+            <p>
+              Works with Dropbox, iCloud, Google Drive, OneDrive, Yandex.Disk, NAS — any folder that
+              syncs.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <h3>Symlink Magic</h3>
+            <p>
+              Files stay in sync folder, symlinks in their place. Edit on one Mac — changes appear
+              everywhere.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3>Automatic Backups</h3>
+            <p>Original files backed up before any changes. Restore anytime with one command.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Simple Config</h3>
+            <p>One config file. List what to sync. Run one command. Done.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>Safe & Reversible</h3>
+            <p>Disable sync anytime. Files restored to original locations automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🍺</div>
+            <h3>Homebrew Ready</h3>
+            <p>Install with one command via Homebrew. Updates delivered automatically.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <h2>How It Works</h2>
+        <div class="diagram-card">
+          <div class="diagram">
+            <div class="diagram-row">
+              <div class="diagram-box local">
+                <span class="label">Local</span>
+                <code>~/.zshrc</code>
+                <span class="arrow">→</span>
+                <span class="type">symlink</span>
+              </div>
+              <div class="diagram-arrow">→</div>
+              <div class="diagram-box cloud">
+                <span class="label">Sync Folder</span>
+                <code>~/Dropbox/MacSync/dotfiles/.zshrc</code>
+                <span class="type">real file</span>
+              </div>
+            </div>
+          </div>
+          <ol class="steps-list">
+            <li>
+              <strong>Backup</strong> — Original files saved to <code>_Backup_default_config/</code>
+            </li>
+            <li>
+              <strong>Move</strong> — Files relocated to <code>&lt;SYNC_FOLDER&gt;/dotfiles/</code>
+            </li>
+            <li><strong>Link</strong> — Symlinks created at original paths</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section class="quick-start" id="quick-start">
+      <div class="container">
+        <h2>Quick Start</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">1</span>
+            <h3>Install</h3>
+            <pre><code>brew install pilaton/tap/macsync</code></pre>
+          </div>
+          <div class="step-card">
+            <span class="step-number">2</span>
+            <h3>Configure</h3>
+            <p>Edit <code>~/.macsync/config.cfg</code>:</p>
+            <pre><code># Where to store synced files
+SYNC_FOLDER=~/Dropbox/MacSync
+
+# What to sync
+BACKUP_FILES=(
+  .zshrc
+  .gitconfig
+  .config/nvim
+  .ssh/config
+)</code></pre>
+          </div>
+          <div class="step-card">
+            <span class="step-number">3</span>
+            <h3>Run</h3>
+            <pre><code>macsync</code></pre>
+            <p>That's it! Your files are now synced.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI Reference Section -->
+    <section class="cli-reference" id="cli">
+      <div class="container">
+        <h2>CLI Reference</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>macsync</code></td>
+                <td>Interactive mode</td>
+              </tr>
+              <tr>
+                <td><code>macsync --dry-run</code></td>
+                <td>Preview without changes</td>
+              </tr>
+              <tr>
+                <td><code>macsync --sync-folder ~/path</code></td>
+                <td>Override sync folder</td>
+              </tr>
+              <tr>
+                <td><code>macsync --files ".zshrc,.gitconfig"</code></td>
+                <td>Override file list</td>
+              </tr>
+              <tr>
+                <td><code>macsync --verbose</code></td>
+                <td>Detailed output</td>
+              </tr>
+              <tr>
+                <td><code>macsync --quiet</code></td>
+                <td>Minimal output</td>
+              </tr>
+              <tr>
+                <td><code>macsync --help</code></td>
+                <td>Show help</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq-grid">
+          <div class="faq-card">
+            <h3>Can I sync files outside <code>~</code>?</h3>
+            <p>No, MacSync only works with paths relative to home directory.</p>
+          </div>
+          <div class="faq-card">
+            <h3>What if I delete a file from sync folder?</h3>
+            <p>Symlink breaks. Use "Disable sync" or restore from backup.</p>
+          </div>
+          <div class="faq-card">
+            <h3>Is it safe for sensitive files?</h3>
+            <p>
+              Avoid syncing private keys. Use <code>.ssh/config</code> with caution. Ensure your
+              cloud encrypts data.
+            </p>
+          </div>
+          <div class="faq-card">
+            <h3>What are the requirements?</h3>
+            <p>macOS 10.15+ (Catalina), zsh, rsync.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-links">
+          <a href="https://github.com/Pilaton/MacSync" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/Pilaton/MacSync/issues" target="_blank" rel="noopener"
+            >Issues</a
+          >
+          <a
+            href="https://github.com/Pilaton/MacSync/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener"
+            >Contributing</a
+          >
+          <a
+            href="https://github.com/Pilaton/MacSync/blob/main/CHANGELOG.md"
+            target="_blank"
+            rel="noopener"
+            >Changelog</a
+          >
+          <a
+            href="https://github.com/Pilaton/MacSync/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener"
+            >MIT License</a
+          >
+        </div>
+        <p class="copyright">
+          Made with 💜 by
+          <a href="https://github.com/Pilaton" target="_blank" rel="noopener">Pilaton</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
