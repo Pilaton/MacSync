@@ -209,4 +209,4 @@ See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
 
 ---
 
-[GitHub](https://github.com/Pilaton/MacSync) · [Issues](https://github.com/Pilaton/MacSync/issues) · [Contributing](CONTRIBUTING.md) · [MIT License](LICENSE)
+[Website](https://pilaton.com/MacSync/) · [GitHub](https://github.com/Pilaton/MacSync) · [Issues](https://github.com/Pilaton/MacSync/issues) · [Contributing](CONTRIBUTING.md) · [MIT License](LICENSE)
