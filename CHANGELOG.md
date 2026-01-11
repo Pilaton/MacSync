@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.0](https://github.com/Pilaton/MacSync/compare/v1.2.1...v2.0.0) (2026-01-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* New CLI interface, modular codebase, interactive menu system, comprehensive test suite, updated documentation with mermaid diagrams, Homebrew tap integration
+
+### Features
+
+* complete rewrite with new architecture ([e64cb23](https://github.com/Pilaton/MacSync/commit/e64cb23f21c296664b1f0a685ea8d16331001892))
+
+
+### Bug Fixes
+
+* **ci:** link bats-core if already installed from cache ([03696c2](https://github.com/Pilaton/MacSync/commit/03696c29e3dd97bf0d96c130900d92ac373000b9))
+* **ci:** unconditional brew link for bats-core ([aa9b22f](https://github.com/Pilaton/MacSync/commit/aa9b22fe4cefc227b0b926983866f389c45d92db))
+* critical bug fixes and code quality improvements ([7388eab](https://github.com/Pilaton/MacSync/commit/7388eabe5a3230962bd630f3f5b29fe0901aa5e2))
+* update-brew-tap should only run when release is created ([cf492d2](https://github.com/Pilaton/MacSync/commit/cf492d26519078fa01184b7babfa92cb484954e2))
+
 ## [1.2.1](https://github.com/Pilaton/MacSync/compare/v1.2.0...v1.2.1) (2023-11-22)
 
 
