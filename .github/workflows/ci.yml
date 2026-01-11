@@ -1,22 +1,86 @@
+name: CI
+
 on:
   push:
-    branches:
-      - main
-name: 🚀 release-please
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "lib/**"
+      - "test/**"
+      - "config/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "lib/**"
+      - "test/**"
+      - "config/**"
+      - ".github/workflows/ci.yml"
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  release-please:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+
+      - name: Check Syntax
+        run: |
+          find lib -name "*.zsh" -print0 | xargs -0 -I {} zsh -n {}
+          zsh -n bin/macsync
+          echo "✅ Syntax check passed"
+
+  test:
+    name: Test
+    needs: lint
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Cache Homebrew
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew
+            /opt/homebrew/Cellar/bats-core
+          key: ${{ runner.os }}-brew-bats-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-brew-bats-
+
+      - name: 🍺 Install BATS
+        run: brew install bats-core
+
+      - name: 🧪 Run tests
+        run: bats test/macsync.bats
+
+      - name: ✅ Summary
+        if: success()
+        run: echo "All tests passed!"
+
+  release:
+    name: Release
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
-      - name: 🕺 release
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🕺 Release
         uses: googleapis/release-please-action@v4
         id: release
         with:
@@ -25,8 +89,9 @@ jobs:
           extra-files: VERSION
 
   update-brew-tap:
-    needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' && needs.release-please.outputs.tag_name != '' }}
+    name: Update Homebrew Tap
+    needs: release
+    if: ${{ needs.release.outputs.releases_created == 'true' && needs.release.outputs.tag_name != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -35,19 +100,17 @@ jobs:
 
       - name: 🍺 Update Homebrew Tap
         env:
-          TAG: ${{ needs.release-please.outputs.tag_name }}
+          TAG: ${{ needs.release.outputs.tag_name }}
           TAP_REPO: Pilaton/homebrew-tap
           TAP_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
-          # Validate required secrets
           if [[ -z "${TAP_TOKEN:-}" ]]; then
             echo "::error::TAP_GITHUB_TOKEN secret is not set"
             exit 1
           fi
 
-          # 1. Download release archive and compute SHA256
           URL="https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${TAG}.tar.gz"
           echo "Downloading ${URL}..."
 
@@ -59,20 +122,17 @@ jobs:
           SHA256=$(sha256sum release.tar.gz | awk '{print $1}')
           echo "SHA256: ${SHA256}"
 
-          # 2. Configure git credentials securely
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git config --global credential.helper store
           echo "https://x-access-token:${TAP_TOKEN}@github.com" > ~/.git-credentials
 
-          # 3. Clone the tap repository
           if ! git clone "https://github.com/${TAP_REPO}.git" tap-repo; then
             echo "::error::Failed to clone tap repository"
             exit 1
           fi
           cd tap-repo
 
-          # 4. Update the formula
           FORMULA_PATH="Formula/macsync.rb"
 
           if [[ ! -f "${FORMULA_PATH}" ]]; then
@@ -82,21 +142,18 @@ jobs:
 
           echo "Updating formula..."
 
-          # Update URL and verify change was made
           if ! grep -q 'url "' "${FORMULA_PATH}"; then
             echo "::error::Could not find url field in formula"
             exit 1
           fi
           sed -i "s|url \".*\"|url \"${URL}\"|" "${FORMULA_PATH}"
 
-          # Update SHA256 and verify change was made
           if ! grep -q 'sha256 "' "${FORMULA_PATH}"; then
             echo "::error::Could not find sha256 field in formula"
             exit 1
           fi
           sed -i "s|sha256 \".*\"|sha256 \"${SHA256}\"|" "${FORMULA_PATH}"
 
-          # 5. Commit and push
           git add "${FORMULA_PATH}"
           if git diff --staged --quiet; then
             echo "No changes to commit."
