@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/Pilaton/MacSync/compare/MacSync-v2.1.0...MacSync-v2.1.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* improve error message for unconfigured sync folder ([102d84a](https://github.com/Pilaton/MacSync/commit/102d84a8b43ff3b78fe385d605c43585bb9bd1e6))
+
 ## [2.1.0](https://github.com/Pilaton/MacSync/compare/MacSync-v2.0.1...MacSync-v2.1.0) (2026-01-11)
 
 
