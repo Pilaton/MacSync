@@ -8,6 +8,7 @@ on:
       - "lib/**"
       - "test/**"
       - "config/**"
+      - "docs/**"
       - ".github/workflows/ci.yml"
       - "release-please-config.json"
       - ".release-please-manifest.json"
@@ -18,6 +19,7 @@ on:
       - "lib/**"
       - "test/**"
       - "config/**"
+      - "docs/**"
       - ".github/workflows/ci.yml"
 
 permissions:
