@@ -61,7 +61,7 @@ load 'test_helper'
 
 @test "VERSION file exists and contains valid version" {
   [ -f "${PROJECT_ROOT}/VERSION" ]
-  version=$(cat "${PROJECT_ROOT}/VERSION" | tr -d '[:space:]')
+  version=$(grep -o '"version": *"[^"]*"' "${PROJECT_ROOT}/VERSION" | cut -d'"' -f4)
   [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
 
